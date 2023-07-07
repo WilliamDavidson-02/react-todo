@@ -6,14 +6,14 @@ import styles from '../module/todoform.module.css'
 export default function TodoForm() {
     const [todoItem, setTodoItem] = useState('')
 
-    const isTodoItems = localStorage.getItem('todoItems');
+    const todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
 
     function handleSubmit(e) {
-        let todoData = JSON.parse(localStorage.getItem('todoItems')) || [];
         e.preventDefault();
-        todoData.push({todoItem: todoItem, isDone: false})
-        localStorage.setItem('todoItems', JSON.stringify(todoData))
-        console.log(todoData);
+        if (todoItem != '') {
+            todoArray.push({todoItem: todoItem, isDone: false})
+            localStorage.setItem('todoItems', JSON.stringify(todoArray))
+        }
         setTodoItem('')
     }
 
@@ -25,21 +25,31 @@ export default function TodoForm() {
             </form>
             <div className={styles.todoItemsContainer}>
                 <div>
-                    <span className={styles.todoItemsUiPurple}>let</span>
-                    <span className={styles.todoItemsUiRed}> todoItems</span>
+                    <span className={styles.todoItemsUiPurple}>const</span>
+                    <span className={styles.todoItemsUiYellow}> todoItems</span>
                     <span className={styles.todoItemsUiBlue}> =</span>
                     <span className={styles.todoItemsUiYellow}> [</span>
                 </div>
-                <div>
-                    {isTodoItems && 
-                        <div>
-                        
-                        </div>
-                    }
-                </div>
+                {todoArray && 
+                    todoArray.map((todo, todoIndex) => {
+                        return (
+                            <div className={styles.todoObjectContainer} key={todoIndex}>
+                                <span className={styles.todoItemsUiPurple}>{'{'}</span>
+                                <div className={styles.todoObjectContainer}>
+                                    <span className={styles.todoItemsUiRed}>todoItem: </span>
+                                    <span className={styles.todoItemsUiGreen}>'{todo.todoItem}'<span style={{color: '#abb2ba'}}>,</span></span>
+                                </div>
+                                <div className={styles.todoObjectContainer}>
+                                    <span className={styles.todoItemsUiRed}>isDone: </span>
+                                    <span className={styles.todoItemsUiYellow}>{`${todo.isDone}`}</span>
+                                </div>
+                                <span className={styles.todoItemsUiPurple}>{'}'}{todoIndex < todoArray.length - 1 && <span style={{color: '#abb2ba'}}>,</span>}</span>
+                            </div>
+                        )
+                    })
+                }
                 <div className={styles.todoItemsUiYellow}>]<span style={{color: '#abb2ba'}}>;</span></div>
             </div>
         </div>
     )
 }
-

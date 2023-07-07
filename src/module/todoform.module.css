@@ -34,6 +34,10 @@
     margin-top: 100px;
 }
 
+.todoObjectContainer {
+    padding-left: 40px;
+}
+
 .todoItemsUiPurple {
     color: #c678dd;
 }
@@ -48,4 +52,8 @@
 
 .todoItemsUiYellow {
     color: #d19a66;
+}
+
+.todoItemsUiGreen {
+    color: #98c379;
 }
