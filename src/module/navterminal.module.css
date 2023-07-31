@@ -1,0 +1,45 @@
+.navTerminalContainer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background-color: #1e2227;
+    transition: ease .2s;
+}
+
+.powerShellContainer {
+    box-sizing: border-box;
+    height: 30px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    padding: 5px 0px 5px 20px;
+}
+
+.powerShellLogo {
+    height: 20px;
+}
+
+.favconIconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 50px;
+    height: 100%;
+}
+
+.favIcon {
+    color: #abb2ba;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.terminalTextarea {
+    box-sizing: border-box;
+    resize: none;
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    height: 470px;
+    padding: 20px;
+    font-size: 16px;
+}
