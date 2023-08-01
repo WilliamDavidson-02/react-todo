@@ -16,7 +16,7 @@ export default function App() {
       <Suspense fallback={<div className={styles.loading}><img src='src/assets/Infinity-1.5s-200px.svg'/></div>}>
         <div className={styles.todoContainer}>
           <TodoForm toggleTerminal={toggleTerminal}/>
-          <NavTerminal toggleTerminal={toggleTerminal} handleToggleTerminal={handleToggleTerminal}/>
+          <NavTerminal toggleTerminal={toggleTerminal} setToggleTerminal={setToggleTerminal} handleToggleTerminal={handleToggleTerminal}/>
         </div>
       </Suspense>
     </ErrorBoundary>
