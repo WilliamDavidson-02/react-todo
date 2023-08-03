@@ -13,9 +13,9 @@ export default function NavTerminal(props) {
     
     const textareaRef = useRef(null)
     const [textareaValue, setTextareaValue] = useState('');
-    const [terminalCommandLineIndex, setTerminalCommandLineIndex] = useState(terminalCommandLine)
+    const [terminalCommandLineIndex, setTerminalCommandLineIndex] = useState(terminalCommandLine.length)
     const todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
-    const pattern = new RegExp('^run (isDone|isNotDone|edit|delete|clear)\\s+(.*)$')
+    const pattern = new RegExp('^run (isDone|isNotDone|edit|delete)\\s+(.*)$')
 
     useEffect(() => {
         if (toggleTerminal) {
@@ -24,52 +24,52 @@ export default function NavTerminal(props) {
         }
     }, [toggleTerminal])
 
-    /* switch statment fo parent pattern check include checking isDone edit item name deleting, clear and defualt invalid command */
-    // run isDone drink more water
-
     useEffect(() => {
         if (toggleTerminal && runCommand) {
-            const command = textareaValue.slice(terminalCommandLineIndex.length);
+            const command = textareaValue.slice(terminalCommandLineIndex);
             const commandRegex = pattern.exec(command)
-            console.log('command', command, 'commandRegex', commandRegex, '1');
-            if (pattern.test(command)) {
-                const itemDoneValue = commandRegex[1];
-                const itemValue = commandRegex[2].trim();
-                console.log(itemDoneValue, itemValue, '2');
-                switch (itemDoneValue) {
-                    case 'isDone':
-                    case 'isNotDone':
-                        const indexToUpdate = todoArray.findIndex((element) => itemValue.toLowerCase() === element.todoItem.toLowerCase());
-                          
-                        if (indexToUpdate !== -1) {
-                            const elementToUpdate = todoArray[indexToUpdate];
-                            elementToUpdate.isDone = itemDoneValue === 'isDone' ? true : false;
-                            localStorage.setItem('todoItems', JSON.stringify(todoArray));
-                        } else {
-                            setTextareaValue(prevValue => `${prevValue}\n${itemValue} does not exist on the todo list`);
-                        }
-                        break;
-                    case 'edit':
-                        console.log(`edit, ${itemValue}`);
-                        break;
-                    case 'delete':
-                        console.log(`delete, ${itemValue}`);
-                        break;
-                    case 'clear':
-                        setTextareaValue('');
-                        break;
-                    default:
-                        console.log(`${itemDoneValue} is a invalid command please enter --help for a list of commands`);
+            console.log(commandRegex, command);
+            const itemDoneValue = commandRegex ? commandRegex[1] : '';
+            const itemValue = commandRegex ? commandRegex[2].trim() : '';
+            switch (true) {
+                case (command === 'help'):
+                    setTextareaValue(prevValue => `${prevValue}\n//Todo list commands//\nrun isDone item --> sets todo item to true\nrun isNotDone item --> set todo item to false\nrun edit item --> edits a existing todo items name\nrun delete item --> deletes the todo item\nclear --> clears terminal\nhelp --> list of commands\n`)
+                    break;
+                case (command === 'clear'):
+                    setTextareaValue('');
+                    break;
+                case pattern.test(command): {
+                    switch (itemDoneValue) {
+                        case 'isDone':
+                        case 'isNotDone':
+                            const indexToUpdate = todoArray.findIndex((element) => itemValue.toLowerCase() === element.todoItem.toLowerCase());
+                                
+                            if (indexToUpdate !== -1) {
+                                const elementToUpdate = todoArray[indexToUpdate];
+                                setTextareaValue(prevValue => `${prevValue}\n> ${elementToUpdate.todoItem} ${itemDoneValue}\n`)
+                                elementToUpdate.isDone = itemDoneValue === 'isDone' ? true : false;
+                                localStorage.setItem('todoItems', JSON.stringify(todoArray));
+                            } else {
+                                setTextareaValue(prevValue => `${prevValue}\n${itemValue} does not exist on the todo list\n`);
+                            }
+                            break;
+                        case 'edit':
+                            console.log(`edit, ${itemValue}`);
+                            break;
+                        case 'delete':
+                            console.log(`delete, ${itemValue}`);
+                            break;
+                        default:
+                            console.log(`${itemDoneValue} is a invalid command please enter "help" for a list of commands\n`);
+                    }
+                    break;
                 }
-            } else if (command === '--help') {
-                setTextareaValue(prevValue => `${prevValue}\n//Todo list commands//\nTemplate -- run {command} {item}\nrun -- always enter this first to run a command\n//Commands//\nisDone -- set item isDone to true\nisNotDone -- set item isDone to false\nedit -- edits the todoItem string\n`)
-            } else {
-                setTextareaValue(prevValue => `${prevValue}\nInvalid command please enter --help for a list of commands`)
+                default:
+                    setTextareaValue(prevValue => `${prevValue}\nInvalid command please enter "help" for a list of commands\n`)
             }
-            setTextareaValue(prevValue => `${prevValue}\n${terminalCommandLine}`) // if treminal has bin cleard do not update area here if couses it to go one row down
-            console.log('textareaValue:', textareaValue);
-            setTerminalCommandLineIndex(`${textareaValue}\n${terminalCommandLine}`) // set new index for new command line including previus textarea value
-            console.log('terminalCommandLineIndex:', terminalCommandLineIndex);
+            setTextareaValue(prevValue => `${prevValue}${terminalCommandLine}`)
+            setTerminalCommandLineIndex((prevValue) => prevValue.length + terminalCommandLine.length);
+            console.log(terminalCommandLineIndex, 'from useEffect');
             textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
             setRunCommand(false);
         }
@@ -86,15 +86,15 @@ export default function NavTerminal(props) {
     }
 
     function handleTextareaChange(e) {
-        e.preventDefault()
-        const { value } = e.target
-        if (value.indexOf(terminalCommandLineIndex) !== -1) {
+        e.preventDefault();
+        textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+        const { value } = e.target;
+        if (value.lastIndexOf(terminalCommandLine) >= 0) {
             setTextareaValue(value);
-          } else {
-            setTerminalCommandLineIndex(textareaValue)
-            setTextareaValue(textareaValue);
+            setTerminalCommandLineIndex(value.lastIndexOf(terminalCommandLine) + terminalCommandLine.length);
         }
     }
+    
 
     return (
         <div className={styles.navTerminalContainer} style={toggleTerminalContainer}>
