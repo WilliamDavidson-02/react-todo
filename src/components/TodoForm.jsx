@@ -19,24 +19,29 @@ function getAndUpdateInnerHeight() {
     }, []);
   
     return innerHeight;
-  }
+}
 
 export default function TodoForm(props) {
     let yPosistion = 0;
-    const { toggleTerminal } = props
+    const { toggleTerminal, runCommand } = props
     const elementRef = useRef(null);
     const currentHeight = getAndUpdateInnerHeight();
     const [todoItem, setTodoItem] = useState('');
-    const todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
     const todoItemsContainerHeight = {
         height: toggleTerminal ? `${currentHeight - yPosistion - 750}px` : `${currentHeight - yPosistion - 300}px`
     }
+    
+    let todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
 
     useEffect(() => {
         if (elementRef.current) {
             yPosistion = elementRef.current.getBoundingClientRect().top;
         }
     }, []);
+
+    useEffect(() => {
+        todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
+    }, [runCommand])
 
     function handleSubmit(e) {
         e.preventDefault();
