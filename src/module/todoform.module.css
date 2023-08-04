@@ -2,6 +2,7 @@
     width: 500px;
     overflow-y: auto;
     scroll-behavior: smooth;
+    margin-top: 100px;
 }
 
 ::-webkit-scrollbar {
@@ -43,32 +44,4 @@ border-radius: 4px;
     border-bottom-right-radius: 5px;
     background-color: #528bff;
     cursor: pointer;
-}
-
-.todoItemsContainer {
-    margin-top: 100px;
-}
-
-.todoObjectContainer {
-    padding-left: 40px;
-}
-
-.todoItemsUiPurple {
-    color: #c678dd;
-}
-
-.todoItemsUiRed {
-    color: #e06c75;
-}
-
-.todoItemsUiBlue {
-    color: #56b6c2;
-}
-
-.todoItemsUiYellow {
-    color: #d19a66;
-}
-
-.todoItemsUiGreen {
-    color: #98c379;
 }

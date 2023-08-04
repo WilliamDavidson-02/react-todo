@@ -21,8 +21,18 @@ function getAndUpdateInnerHeight() {
     return innerHeight;
 }
 
+const colors = {
+    purple: '#c678dd',
+    red: '#e06c75',
+    blue: '#56b6c2',
+    yellow: '#d19a66',
+    green: '#98c379',
+    grey: '#abb2ba',
+}
+
 export default function TodoForm(props) {
     let yPosistion = 0;
+    let todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
     const { toggleTerminal, runCommand } = props
     const elementRef = useRef(null);
     const currentHeight = getAndUpdateInnerHeight();
@@ -30,18 +40,12 @@ export default function TodoForm(props) {
     const todoItemsContainerHeight = {
         height: toggleTerminal ? `${currentHeight - yPosistion - 750}px` : `${currentHeight - yPosistion - 300}px`
     }
-    
-    let todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
 
     useEffect(() => {
         if (elementRef.current) {
             yPosistion = elementRef.current.getBoundingClientRect().top;
         }
     }, []);
-
-    useEffect(() => {
-        todoArray = JSON.parse(localStorage.getItem('todoItems')) || [];
-    }, [runCommand])
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -54,37 +58,37 @@ export default function TodoForm(props) {
 
     return (
         <div className={styles.mainContainer}>
-            <form className={styles.formContainer} onSubmit={handleSubmit}>
-                <input className={styles.todoInput} placeholder='// New Todo' value={todoItem} onChange={(e) => setTodoItem(e.target.value)}/>
-                <button className={styles.submitTodoBtn} type="submit"><FontAwesomeIcon icon={faPlus}/></button>
-            </form>
-            <div className={styles.todoItemsContainer} style={todoItemsContainerHeight} ref={elementRef}>
-                <div>
-                    <span className={styles.todoItemsUiPurple}>const</span>
-                    <span className={styles.todoItemsUiYellow}> todoItems</span>
-                    <span className={styles.todoItemsUiBlue}> =</span>
-                    <span className={styles.todoItemsUiYellow}> [</span>
-                </div>
-                {todoArray && 
-                    todoArray.map((todo, todoIndex) => {
-                        return (
-                            <div className={styles.todoObjectContainer} key={todoIndex}>
-                                <span className={styles.todoItemsUiPurple}>{'{'}</span>
-                                <div className={styles.todoObjectContainer}>
-                                    <span className={styles.todoItemsUiRed}>todoItem<span style={{color: '#abb2ba'}}>:</span> </span>
-                                    <span className={styles.todoItemsUiGreen}>'{todo.todoItem}'<span style={{color: '#abb2ba'}}>,</span></span>
-                                </div>
-                                <div className={styles.todoObjectContainer}>
-                                    <span className={styles.todoItemsUiRed}>isDone<span style={{color: '#abb2ba'}}>:</span> </span>
-                                    <span className={styles.todoItemsUiYellow}>{`${todo.isDone}`}</span>
-                                </div>
-                                <span className={styles.todoItemsUiPurple}>{'}'}{todoIndex < todoArray.length - 1 && <span style={{color: '#abb2ba'}}>,</span>}</span>
-                            </div>
-                        )
-                    })
-                }
-                <div className={styles.todoItemsUiYellow}>]<span style={{color: '#abb2ba'}}>;</span></div>
+        <form className={styles.formContainer} onSubmit={handleSubmit}>
+            <input className={styles.todoInput} placeholder='// New Todo' value={todoItem} onChange={(e) => setTodoItem(e.target.value)}/>
+            <button className={styles.submitTodoBtn} type="submit"><FontAwesomeIcon icon={faPlus}/></button>
+        </form>
+        <div className={styles.todoItemsContainer} style={todoItemsContainerHeight} ref={elementRef}>
+            <div>
+                <span style={{color: colors.purple}}>const</span>
+                <span style={{color: colors.yellow}}> todoItems</span>
+                <span style={{color: colors.blue}}> =</span>
+                <span style={{color: colors.yellow}}> [</span>
             </div>
+            {todoArray && 
+                todoArray.map((todo, todoIndex) => {
+                    return (
+                        <div style={{paddingLeft: '40px'}} key={todoIndex}>
+                            <span style={{color: colors.purple}}>{'{'}</span>
+                            <div style={{paddingLeft: '40px'}}>
+                                <span style={{color: colors.red}}>todoItem<span style={{color: colors.grey}}>:</span> </span>
+                                <span style={{color: colors.green}}>'{todo.todoItem}'<span style={{color: colors.grey}}>,</span></span>
+                            </div>
+                            <div style={{paddingLeft: '40px'}}>
+                                <span style={{color: colors.red}}>isDone<span style={{color: colors.grey}}>:</span> </span>
+                                <span style={{color: colors.yellow}}>{`${todo.isDone}`}</span>
+                            </div>
+                            <span style={{color: colors.purple}}>{'}'}{todoIndex < todoArray.length - 1 && <span style={{color: colors.grey}}>,</span>}</span>
+                        </div>
+                    )
+                })
+            }
+            <div style={{color: colors.yellow}}>]<span style={{color: colors.grey}}>;</span></div>
         </div>
+    </div>
     )
 }
