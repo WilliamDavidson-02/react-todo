@@ -2,7 +2,7 @@ import { Suspense, useState } from 'react'
 import styles from './module/app.module.css'
 import ErrorBoundary from './ErrorBoundary'
 import TodoForm from './components/TodoForm'
-import NavTerminal from './components/navTerminal'
+import NavTerminal from './components/NavTerminal'
 
 export default function App() {
   const [toggleTerminal, setToggleTerminal] = useState(false)
